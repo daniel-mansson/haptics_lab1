@@ -82,6 +82,9 @@ cLabel* assignmentLabel = 0;
 double assignmentLabelWidth;
 double rateEstimate = 0;
 
+//A clock measuring the total time
+cPrecisionClock clockTotal;
+
 
 // status of the main simulation haptics loop
 bool simulationRunning = false;
@@ -298,6 +301,8 @@ void reset(size_t assignmentId)
     assignmentLabelWidth = 0.0;
     for(size_t i = 0; i < assignmentLabel->m_string.size(); ++i)
         assignmentLabelWidth += assignmentLabel->m_font->getCharacterWidth(assignmentLabel->m_string[i]);
+
+    clockTotal.start(true);
 }
 
 //---------------------------------------------------------------------------
@@ -432,8 +437,6 @@ void updateHaptics(void)
     pclock.setTimeoutPeriodSeconds(1.0);
     pclock.start(true);
 
-    cPrecisionClock clock;
-    clock.start(true);
     int counter = 0;
 
     cPrecisionClock frameClock;
@@ -445,7 +448,7 @@ void updateHaptics(void)
         if (!hapticDevice)
             continue;
 
-        double totalTime = clock.getCurrentTimeSeconds();
+        double totalTime = clockTotal.getCurrentTimeSeconds();
 
         double timeStep = frameClock.getCurrentTimeSeconds();
         frameClock.start(true);
